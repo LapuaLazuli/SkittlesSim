@@ -6,19 +6,22 @@
 #include "SkittlesSim.h"
 
 #define NUM_OF_SKITTLES 60
-#define SIMS_ALLOWED 1000
+//#define SIMS_ALLOWED 1000
 
 int main() {
 
     /**
      * parallelize the whole freaking Sim
+     * make sure the proper bag number is being calculated
+     * discuss stuff further I guess
      */
 
-    double simResults[SIMS_ALLOWED] = {0};
+    //double simResults[SIMS_ALLOWED] = {0};
+    double average = 0;
 
 // #pragma omp parallel for
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wmissing-noreturn"
     for (int simNum = 0; true ; ++simNum) {
 
         // set up dummy first node for chain of skittles bags
@@ -51,22 +54,29 @@ int main() {
 
             // check newest bag against all previous bags to see if we've found a duplicate
             // if so, contribute the number of bags it took to the simResults array and quit this sim
+            //EDIT: redid it now so that when it finds a bag it adds it to a total and prints out the current updated average
+            //NOTE: The computed average is never actually stored. The double is just constantly added to and is computed proper in the print statement
             while (!dupeFound && otherBag->nextBag != NULL)
             {
                 if (strcmp(head->bag, otherBag->bag) == 0)
                 {
-                    simResults[simNum] = currentBagNum;
+                    //simResults[simNum] = currentBagNum;
+                    //adds bag number to current total
+                    average += currentBagNum;
                     dupeFound = true;
-                }
+                    //prints out the sim number and the average (note that the result is never stored)
+                    printf("Sim #%d: Current Average: %.3f\n", simNum + 1, (average / (simNum + 1)));
+                } else otherBag = otherBag->nextBag;
             }
         } // END of bag generation/comparison
 
         // write final result to file
 
+
         // free bag memory allocation
 
     } // END of SIM
-#pragma clang diagnostic pop
+//#pragma clang diagnostic pop
 
 
 }
