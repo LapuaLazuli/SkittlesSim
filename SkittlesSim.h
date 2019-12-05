@@ -13,7 +13,7 @@
 typedef struct skittlesBag
 {
     char bag[6];
-    int bagNumber;
+    short bagNumber;
     struct skittlesBag *nextBag;
 } SKITTLES_BAG;
 
